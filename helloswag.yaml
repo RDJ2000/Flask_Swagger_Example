@@ -1,0 +1,155 @@
+openapi: 3.0.0
+info:
+  title: User Management API
+  description: API to manage users in the system.
+  version: 1.0.0
+servers:
+- url: http://localhost:5000
+  description: Local development server
+paths:
+  /users:
+    get:
+      summary: Get all users
+      description: Fetch a list of all users in the system.
+      operationId: users_get
+      responses:
+        "200":
+          description: Successful response with a list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/inline_response_200'
+                x-content-type: application/json
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+    post:
+      summary: Create a new user
+      description: Create a new user in the system.
+      operationId: users_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/users_body'
+        required: true
+      responses:
+        "201":
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /users/{id}:
+    get:
+      summary: Get a user by ID
+      description: Fetch user details by their unique ID.
+      operationId: users_id_get
+      parameters:
+      - name: id
+        in: path
+        description: ID of the user to fetch
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Successful response with user details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "404":
+          description: User not found
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+    put:
+      summary: Update a user by ID
+      description: Update details of an existing user by ID.
+      operationId: users_id_put
+      parameters:
+      - name: id
+        in: path
+        description: ID of the user to update
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/users_id_body'
+        required: true
+      responses:
+        "200":
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "404":
+          description: User not found
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+    delete:
+      summary: Delete a user by ID
+      description: Delete the user by their unique ID.
+      operationId: users_id_delete
+      parameters:
+      - name: id
+        in: path
+        description: ID of the user to delete
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: User deleted successfully
+        "404":
+          description: User not found
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+components:
+  schemas:
+    inline_response_200:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: John Doe
+        email:
+          type: string
+          example: john.doe@example.com
+      example:
+        name: John Doe
+        id: 1
+        email: john.doe@example.com
+    users_body:
+      required:
+      - email
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          example: John Doe
+        email:
+          type: string
+          example: john.doe@example.com
+    users_id_body:
+      type: object
+      properties:
+        name:
+          type: string
+          example: John Doe
+        email:
+          type: string
+          example: john.doe@example.com
+
